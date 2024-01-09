@@ -1,4 +1,4 @@
-# Projet-GO-BUT2-201-CUENOT-BOUVIER-HUANG-HIEGEL
+# Projet-GO-BUT2-201-BOUVIER-HUANG-HIEGEL
 
 ## Projet Jeu de Go
 
@@ -16,7 +16,6 @@ La documentation pour la norme GTP (Go Text Protocol) peut être trouvée sur le
 - HUANG Loïc
 - HIEGEL Oleg
 - BOUVIER Charles
-- CUENOT Valentin
 
 ## Commandes
 
