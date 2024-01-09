@@ -40,14 +40,13 @@ public class GTPInterpreter {
 	}
 
 	private Coord parseCoord(String xyStr) {
-		int x = xyStr.charAt(0) - 'A';
-		int y;
 		try {
-			y = Integer.parseInt(xyStr.substring(1)) - 1;
+			int x = xyStr.charAt(0) - 'A';
+			int y = Integer.parseInt(xyStr.substring(1)) - 1;
+			return new Coord(x, y);
 		} catch (Exception e) {
 			return null;
 		}
-		return new Coord(x, y);
 	}
 
 	private void play() {
@@ -59,18 +58,20 @@ public class GTPInterpreter {
 		String xyStr = args.get(1).toUpperCase();
 		Coord xy = parseCoord(xyStr);
 		if (xy == null) {
+			error("invalid color or coordinate");
 			return;
 		}
 		play(color, xy);
 	}
 
 	private void play(String color, Coord xy) {
-		int prises = goban.play(color, xy.x(), xy.y());
+		int prises = goban.play(color, xy.getX(), xy.getY());
 		if (prises == -1) {
+			error("invalid color or coordinate");
+		} else if (prises == -2) {
 			error("illegal move");
-		} else {
-			repondre("");
 		}
+		repondre("");
 		System.out.println(goban.showboard());
 	}
 
@@ -86,16 +87,13 @@ public class GTPInterpreter {
 	}
 
 	private String parseCommand(String ligne) {
-		ligne = ligne.trim();
+		ligne = ligne.trim().toLowerCase();
 		String command = "";
 		if (ligne.isEmpty()) {
 			return command;
 		}
 		int iCommand = 0;
 		String[] tokens = ligne.split("\\s+");
-		if (tokens.length == 0) {
-			return command;
-		}
 		id = getNumber(tokens[0]);
 		if (tokens[0].matches("\\d+")) {
 			if (tokens.length == 1) {
@@ -104,7 +102,7 @@ public class GTPInterpreter {
 			}
 			id = tokens[0];
 			iCommand++;
-			command = tokens[iCommand].toLowerCase();
+			command = tokens[iCommand];
 		} else {
 			command = tokens[iCommand].substring(id.length());
 		}
@@ -125,11 +123,13 @@ public class GTPInterpreter {
 		boolean continuer = true;
 		String commande;
 		while (continuer && !goban.isFinished()) {
-			if (!(currentPlayer() instanceof ConsolePlayer)) {
+			if (currentPlayer().getKind().equals("RandomPlayer")) {
 				Coord xy = currentPlayer().getMove(goban);
 				if (xy != null) {
-					System.out.println(goban.toMove().toString() + " : " + xy.x() + " " + xy.y());
-					goban.play(xy);
+					int x = xy.getX();
+					int y = xy.getY();
+					System.out.println(goban.toMove().toString() + " : " + x + " " + y);
+					goban.play(x, y);
 					System.out.println(goban.showboard());
 				} else {
 					System.out.println(goban.toMove().toString() + " : skip");
@@ -188,21 +188,23 @@ public class GTPInterpreter {
 			error("syntax error");
 			return;
 		}
-		String colorStr = args.get(0).toUpperCase();
-		Color color = Color.valueOf(colorStr);
-		if (color == null) {
+		try {
+			String colorStr = args.get(0).toUpperCase();
+			Color color = Color.valueOf(colorStr);
+			if (color == null) {
+				return;
+			}
+			String type = args.get(1).toLowerCase();
+			IPlayer p = Players.getOrDefault(type, null);
+			if (p == null) {
+				error("unknown player kind");
+				return;
+			}
+			players.put(color, p);
+			repondre(colorStr.toString() + " : " + p.getKind());
+		} catch (Exception e) {
 			error("illegal color");
-			return;
 		}
-
-		String type = args.get(1).toLowerCase();
-		IPlayer p = Players.get(type);
-		if (p == null) {
-			error("unknown player kind");
-			return;
-		}
-		players.put(color, p);
-		repondre(colorStr.toString() + " : " + p.getKind());
 	}
 
 	private void liberties() {

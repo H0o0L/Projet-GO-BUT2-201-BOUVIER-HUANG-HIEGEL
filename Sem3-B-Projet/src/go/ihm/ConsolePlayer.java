@@ -8,7 +8,7 @@ public class ConsolePlayer implements IPlayer {
 
 	@Override
 	public Coord getMove(Goban goban) {
-		return null;
+		throw new RuntimeException();
 	}
 
 	@Override

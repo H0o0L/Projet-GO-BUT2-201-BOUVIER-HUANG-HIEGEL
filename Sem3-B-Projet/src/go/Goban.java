@@ -1,8 +1,5 @@
 package go;
 
-import static go.Color.BLACK;
-import static go.Color.WHITE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -47,13 +44,12 @@ public class Goban {
 
 	public int play(int x, int y) {
 		Coord coord = new Coord(x, y);
-		Coord lastTake = toMove.otherColor().getLT();
-		if (board[x][y].isOccupied() || (lastTake != null && lastTake.equals(coord))) {
-			return -1;
+		if (board[x][y].isOccupied() || toMove.ko(coord)) {
+			return -2;
 		}
 		int prises = capture(x, y);
 		if (prises <= 0 && isSuicide(x, y)) {
-			return -1;
+			return -2;
 		}
 		board[x][y].setStone(toMove);
 		toMove.havePlay();
@@ -63,14 +59,14 @@ public class Goban {
 	}
 
 	public int play(Coord c) {
-		return play(c.x(), c.y());
+		return play(c.getX(), c.getY());
 	}
 
 	public int capture(int x, int y) {
 		int prises = 0;
 		List<Coord> takes = new ArrayList<>();
 		for (Coord c : getVoisin(x, y)) {
-			if (board[c.x()][c.y()].toChar() == toMove.otherColor().getSymbol()) {
+			if (board[c.getX()][c.getY()].toChar() == toMove.otherColor().getSymbol()) {
 				List<Coord> liberties = new ArrayList<>();
 				liberties.add(c);
 				int libertiesCount = getLibertiesRecursive(c, liberties, new ArrayList<>(liberties));
@@ -78,15 +74,14 @@ public class Goban {
 					int pris = liberties.size();
 					prises += pris;
 					takes.addAll(liberties);
-					toMove.addToScore(pris);
+					toMove.addScore(pris);
 					for (Coord l : liberties) {
-						board[l.x()][l.y()].clear();
+						board[l.getX()][l.getY()] = new Intersection();
 					}
 				}
 			}
 		}
 		if (takes.size() == 1) {
-			System.out.println(takes.get(0));
 			toMove.play(takes.get(0));
 		}
 		return prises;
@@ -94,9 +89,9 @@ public class Goban {
 
 	public boolean isSuicide(int x, int y) {
 		for (Coord c : getVoisin(x, y)) {
-			if (!board[c.x()][c.y()].isOccupied()) {
+			if (!board[c.getX()][c.getY()].isOccupied()) {
 				return false;
-			} else if (board[c.x()][c.y()].toChar() == toMove.getSymbol()) {
+			} else if (board[c.getX()][c.getY()].toChar() == toMove.getSymbol()) {
 				List<Coord> liberties = new ArrayList<>();
 				liberties.add(c);
 				int libertiesCount = getLibertiesRecursive(c, liberties, new ArrayList<>(liberties));
@@ -117,13 +112,13 @@ public class Goban {
 
 	private int getLibertiesRecursive(Coord coord, List<Coord> l, List<Coord> visited) {
 		int liberty = 0;
-		for (Coord c : getVoisin(coord.x(), coord.y())) {
+		for (Coord c : getVoisin(coord.getX(), coord.getY())) {
 			if (!visited.contains(c)) {
-				char boardChar = board[c.x()][c.y()].toChar();
-				if (!board[c.x()][c.y()].isOccupied()) {
+				char boardChar = board[c.getX()][c.getY()].toChar();
+				if (!board[c.getX()][c.getY()].isOccupied()) {
 					liberty++;
 					visited.add(c);
-				} else if (boardChar == board[coord.x()][coord.y()].toChar()) {
+				} else if (boardChar == board[coord.getX()][coord.getY()].toChar()) {
 					l.add(c);
 					visited.add(c);
 					liberty += getLibertiesRecursive(c, l, visited);
@@ -140,8 +135,8 @@ public class Goban {
 	private List<Coord> getVoisin(int x, int y) {
 		List<Coord> coordList = new ArrayList<>();
 		for (Coord c : voisins) {
-			int newX = x + c.x();
-			int newY = y + c.y();
+			int newX = x + c.getX();
+			int newY = y + c.getY();
 			Coord Co = new Coord(newX, newY);
 			if (coordOK(newX, newY)) {
 				coordList.add(Co);
@@ -215,9 +210,9 @@ public class Goban {
 			}
 			sb.append(i + 1);
 			if (i == scorePlace) {
-				sb.append("     BLACK (X) has captured ").append(BLACK.getScore()).append(" stones");
+				sb.append("     BLACK (X) has captured ").append(Color.BLACK.getScore()).append(" stones");
 			} else if (i == 1 + scorePlace) {
-				sb.append("     WHITE (O) has captured ").append(WHITE.getScore()).append(" stones");
+				sb.append("     WHITE (O) has captured ").append(Color.WHITE.getScore()).append(" stones");
 			}
 			sb.append('\n');
 		}
@@ -230,7 +225,7 @@ public class Goban {
 	}
 
 	public boolean isFinished() {
-		return BLACK.haveSkip() && WHITE.haveSkip();
+		return Color.BLACK.haveSkip() && Color.WHITE.haveSkip();
 	}
 
 	public void skip() {

@@ -3,7 +3,7 @@ package go;
 public enum Color {
 	BLACK, WHITE;
 
-	private int score;
+	private int score = 0;
 	private Coord lastTake;
 	private boolean skip = false;
 
@@ -25,15 +25,15 @@ public enum Color {
 		};
 	}
 
-	public void addToScore(int points) {
-		score += points;
+	void addScore(int score) {
+		this.score += score;
 	}
 
-	public void skip() {
+	void skip() {
 		skip = true;
 	}
 
-	public void havePlay() {
+	void havePlay() {
 		skip = false;
 	}
 
@@ -41,8 +41,13 @@ public enum Color {
 		return skip;
 	}
 
-	public void play(Coord c) {
+	void play(Coord c) {
 		lastTake = c;
+	}
+
+	public boolean ko(Coord c) {
+		Coord coord = this.otherColor().lastTake;
+		return coord != null && coord.equals(c);
 	}
 
 	public Coord getLT() {

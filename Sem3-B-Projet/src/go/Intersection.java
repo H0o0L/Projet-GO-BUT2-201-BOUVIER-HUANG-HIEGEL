@@ -15,10 +15,6 @@ public class Intersection {
 		return stone != '.';
 	}
 
-	public void clear() {
-		stone = '.';
-	}
-
 	public char toChar() {
 		return stone;
 	}

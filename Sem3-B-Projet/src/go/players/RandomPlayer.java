@@ -10,29 +10,22 @@ public class RandomPlayer implements IPlayer {
 
 	@Override
 	public Coord getMove(Goban g) {
-		/*
-		 * if (g.toMove().otherColor().haveSkip() && g.toMove().getScore() >
-		 * g.toMove().otherColor().getScore()) { return null; }
-		 */
+		if (g.toMove().otherColor().haveSkip() && g.toMove().getScore() > g.toMove().otherColor().getScore()) {
+			return null;
+		}
 		Random r = new Random();
 		int size = g.getBoardSize();
-		int rx = r.nextInt(size);
-		int ry = r.nextInt(size);
-		int essaie = size * size;
-		Coord lastTake = g.toMove().otherColor().getLT();
-		System.out.println(lastTake);
-		while (g.isOccupied(rx, ry) || (lastTake != null && lastTake.equals(new Coord(rx, ry)))
-				|| (g.capture(rx, ry) <= 0 && g.isSuicide(rx, ry))) {
-			if (rx + 1 / size == 1) {
-				ry = (ry + 1) % size;
-			}
-			rx = (rx + 1) % size;
-			essaie--;
-			if (essaie == 0) {
-				return null;
+		int boardplace = size * size;
+		int xy = r.nextInt(boardplace - 1);
+		for (int i = 0; i < boardplace; i++) {
+			int x = ((xy + i) / size) % size;
+			int y = (xy + i) % size;
+			Coord coord = new Coord(x, y);
+			if (!g.isOccupied(x, y) && !g.toMove().ko(coord) && (g.capture(x, y) > 0 || !g.isSuicide(x, y))) {
+				return coord;
 			}
 		}
-		return new Coord(rx, ry);
+		return null;
 	}
 
 	@Override
