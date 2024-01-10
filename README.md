@@ -24,6 +24,8 @@ La documentation pour la norme GTP (Go Text Protocol) peut être trouvée sur le
 - `clear_board`: Réinitialise le plateau de jeu.
 - `boardsize x`: Définit la taille du plateau à x.
 - `play color xy`: Effectue un coup de la couleur spécifiée (noir ou blanc) aux coordonnées xy, où xy est une lettre suivie d'un nombre (par exemple, a1, b2, etc.).
+- `skip`: Passe le tour du joueur en cours sans effectuer de coup.
+- `liberties xy`: Affiche le nombre de libertés de la pierre située aux coordonnées xy.
 
 ### Commandes de joueur
 - `player color type`: Définit le type de joueur (console, random, etc.) pour la couleur spécifiée.
