@@ -1,5 +1,10 @@
 # Projet-GO-BUT2-201-BOUVIER-HUANG-HIEGEL
 
+Du bon travail mais il faut apprendre à bien respecter les consignes :
+- envoi du rapport par mail (interdit cela encombre ma boite) et sans rappel du lien vers le projet (je recois des dizaines de mail sur le projet go)
+- diagramme non conforme malgré les explications fournies maintes fois regardez mes corrigés
+  
+
 ## Projet Jeu de Go
 
 Ce projet est une implémentation du jeu de Go réalisée dans le cadre du cours BUT2-201 à l'Université Rives de Seine. 
