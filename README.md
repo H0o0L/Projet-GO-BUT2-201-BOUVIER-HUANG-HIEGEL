@@ -13,9 +13,9 @@ La documentation pour la norme GTP (Go Text Protocol) peut être trouvée sur le
 - [GNU Go - Téléchargement](https://ftp.gnu.org/gnu/gnugo/)
 
 ## Auteurs
-- HUANG Loïc
-- HIEGEL Oleg
-- BOUVIER Charles
+- HUANG Loïc  @H0o0L
+- HIEGEL Oleg @Olltrack
+- BOUVIER Charles @lignix
 
 ## Commandes
 
