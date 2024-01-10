@@ -1,5 +1,7 @@
 # Projet-GO-BUT2-201-BOUVIER-HUANG-HIEGEL
 
+note 17/20 essayez de bien respecter le détail des consignes (diagramme, mettre le lien sur le projet à chaque mail, mettre le groupe de chaque étudiant ...)
+
 Du bon travail mais il faut apprendre à bien respecter les consignes :
 - envoi du rapport par mail (interdit cela encombre ma boite) et sans rappel du lien vers le projet (je recois des dizaines de mail sur le projet go)
 - diagramme non conforme malgré les explications fournies maintes fois regardez mes corrigés
